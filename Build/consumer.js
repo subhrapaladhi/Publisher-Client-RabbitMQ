@@ -13,19 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const amqplib_1 = __importDefault(require("amqplib"));
-function connect(msg) {
+connect();
+function connect() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // tcp connection
             const connection = yield amqplib_1.default.connect("amqp://localhost:5672");
             const channel = yield connection.createChannel();
             const result = yield channel.assertQueue("jobs"); //jobs is queue name
-            channel.sendToQueue("jobs", Buffer.from(JSON.stringify({ number: msg }))); //(queue name, buffer data)
-            console.log("Job sent successfully ", { msg });
+            channel.consume("jobs", message => {
+                if (message) {
+                    const input = JSON.parse(message.content.toString());
+                    if (input.number) {
+                        console.log(`Received job with input ${input.number}`);
+                        channel.ack(message);
+                    }
+                }
+                else {
+                    console.log("message was empty");
+                }
+            });
+            console.log("waiting for messages....");
         }
         catch (err) {
             console.log(err);
         }
     });
 }
-connect(Number(process.argv[2]));

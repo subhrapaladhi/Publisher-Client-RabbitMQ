@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node ./Build/",
-    "dev": "nodemon ./Build",
+    "publish": "node ./Build/publisher.js",
+    "consume": "node ./Build/consumer.js",
     "tsc": "tsc -w"
   },
   "author": "",
