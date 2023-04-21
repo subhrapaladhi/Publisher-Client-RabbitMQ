@@ -16,6 +16,6 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "amqplib": "^0.6.0"
+    "amqplib": "^0.10.3"
   }
 }
